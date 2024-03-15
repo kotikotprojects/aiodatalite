@@ -1,13 +1,8 @@
-# Datalite
-
-[![Maintainability](https://api.codeclimate.com/v1/badges/9d4ce56bfbd3b63649be/maintainability)](https://codeclimate.com/github/ambertide/datalite/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/9d4ce56bfbd3b63649be/test_coverage)](https://codeclimate.com/github/ambertide/datalite/test_coverage)
-[![PyPI version shields.io](https://img.shields.io/pypi/v/datalite.svg)](https://pypi.python.org/pypi/datalite/)
-[![PyPI license](https://img.shields.io/pypi/l/datalite.svg)](https://pypi.python.org/pypi/datalite/)
-[![Documentation Status](https://readthedocs.org/projects/datalite/badge/?version=latest)](https://datalite.readthedocs.io/en/latest/?badge=latest)
+# aiodatalite
 
 > [!WARNING]  
-> This project is a hobby project and it should not be used for security-critical or user facing applications.
+> Original project is a hobby project and it should not be used for security-critical or user facing applications.
+> The same goes for this fork
 
 It should be noted that Datalite is not suitable for secure web applications, it really is only suitable for cases when you can trust user input.
 
@@ -21,19 +16,22 @@ definition, and the dataclass will now be bound to the file `db.db`
 
 ## Download and Install
 
-You can install `datalite` simply by
+You can install `aiodatalite` simply by
 
 ```shell script
-pip install datalite
+pip install aiodatalite
 ```
 
 Or you can clone the repository and run
 
 ```shell script
-python setup.py
+pip install .
 ```
 
-Datalite has no dependencies! As it is built on Python 3.7+ standard library. Albeit, its tests require `unittest` library.
+Use poetry to develop.
+
+~~Datalite has no dependencies! As it is built on Python 3.7+ standard library. Albeit, its tests require `unittest` library.~~
+`aiodatalite` depends on `aiosqlite` library to provide a reliable asynchronous interface
 
 ## Datalite in Action
 

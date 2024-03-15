@@ -8,3 +8,4 @@ build/*
 datalite.egg-info/*
 dist/*
 venv/*
+t/

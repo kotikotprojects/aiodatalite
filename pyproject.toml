@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "aiodatalite"
+version = "0.7.3"
+description = "A simple Python library to bind dataclasses with databases. Now asynchronous!"
+authors = ["hhh <h@localhost>", "Ege Ozkan <egeemirozkan24@gmail.com>"]
+readme = "README.md"
+
+
+[tool.poetry.dependencies]
+python = ">=3.9"
+aiosqlite = "^0.20.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
