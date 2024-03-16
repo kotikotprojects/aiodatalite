@@ -9,3 +9,4 @@ datalite.egg-info/*
 dist/*
 venv/*
 t/
+poetry.lock
