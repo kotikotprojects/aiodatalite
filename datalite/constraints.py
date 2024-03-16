@@ -4,15 +4,16 @@ datalite.constraints module introduces constraint
     that can be used to signal datalite decorator
     constraints in the database.
 """
-from typing import TypeVar, Union, Tuple
+from typing import Tuple, TypeVar, Union
 
-T = TypeVar('T')
+T = TypeVar("T")
 
 
 class ConstraintFailedError(Exception):
     """
     This exception is raised when a Constraint fails.
     """
+
     pass
 
 
@@ -24,3 +25,4 @@ Dataclass fields hinted with this type signals
 Unique = Union[Tuple[T], T]
 
 
+__all__ = ['Unique', 'ConstraintFailedError']
