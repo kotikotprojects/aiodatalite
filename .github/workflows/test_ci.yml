@@ -20,18 +20,18 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4.1.1
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5.0.0
         with:
           python-version: '3.x'
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip && pip install coverage
+          python -m pip install --upgrade pip && pip install coverage && pip install .
       - name: Test & publish code coverage
-        uses: paambaati/codeclimate-action@v2.6.0
+        uses: paambaati/codeclimate-action@v5.0.0
         env:
-          CC_TEST_REPORTER_ID: ${{ secrets.CC_TESTING_KEY }}
+          CC_TEST_REPORTER_ID: d4b381e9c8b15079fa7f08a48037b0307125e9812ea02ecf6bcc0ee1c24eae2a
         with:
           coverageCommand: sh coverage.sh
           debug: true
