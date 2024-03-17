@@ -148,6 +148,7 @@ database without the possibility of migration. We recommend using multiple table
 (must be organized independently) in such cases.
 
 The tweaked functionality of types can be disabled by passing the tweaked parameter as False to the datalite decorator
+
 .. code-block:: python
 
     from aiodatalite import datalite
