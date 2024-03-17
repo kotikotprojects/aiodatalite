@@ -3,10 +3,10 @@ Defines the Datalite decorator that can be used to convert a dataclass to
 a class bound to an sqlite3 database.
 """
 from dataclasses import asdict, fields
-from sqlite3.dbapi2 import IntegrityError
 from typing import Callable, Dict, Optional
 
 import aiosqlite
+from aiosqlite import IntegrityError
 
 from .commons import _create_table, _tweaked_create_table, _tweaked_dump, type_table
 from .constraints import ConstraintFailedError
@@ -36,6 +36,9 @@ async def _create_entry(self) -> None:
             await con.commit()
         except IntegrityError:
             raise ConstraintFailedError("A constraint has failed.")
+        finally:
+            await cur.close()
+            await con.close()
 
 
 async def _tweaked_create_entry(self) -> None:
@@ -55,6 +58,9 @@ async def _tweaked_create_entry(self) -> None:
             await con.commit()
         except IntegrityError:
             raise ConstraintFailedError("A constraint has failed.")
+        finally:
+            await cur.close()
+            await con.close()
 
 
 async def _update_entry(self) -> None:

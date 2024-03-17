@@ -3,6 +3,7 @@ from pickle import HIGHEST_PROTOCOL, dumps, loads
 from typing import Any, Dict, List, Optional
 
 import aiosqlite
+from aiosqlite import IntegrityError
 
 from .constraints import Unique
 
@@ -158,7 +159,14 @@ def _tweaked_dump_value(self, value):
 
 def _tweaked_dump(self, name):
     value = getattr(self, name)
-    return _tweaked_dump_value(self, value)
+    field_types = {key: value.type for key, value in self.__dataclass_fields__.items()}
+    if (
+        "NOT NULL UNIQUE" not in self.types_table.get(field_types[name], "")
+        or value is not None
+    ):
+        return _tweaked_dump_value(self, value)
+    else:
+        raise IntegrityError
 
 
 def _tweaked_load_value(data):
