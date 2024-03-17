@@ -1,3 +1,4 @@
+import sqlite3
 from dataclasses import MISSING, Field
 from pickle import HIGHEST_PROTOCOL, dumps, loads
 from typing import Any, Dict, List, Optional
@@ -103,6 +104,28 @@ def _get_default(
         return " DEFAULT ?"
 
 
+def _get_creation_data(
+    class_: type,
+    type_overload: Dict[Optional[type], str],
+    type_converter,
+):
+    fields: List[Field] = [
+        class_.__dataclass_fields__[key] for key in class_.__dataclass_fields__.keys()
+    ]
+    fields.sort(key=lambda field: field.name)  # Since dictionaries *may* be unsorted.
+
+    def_params = list()
+
+    sql_fields = ", ".join(
+        f"{field.name} {type_converter(field.type, type_overload)}"
+        f"{_get_default(field.default, type_overload, def_params)}"
+        for field in fields
+    )
+
+    sql_fields = "obj_id INTEGER PRIMARY KEY AUTOINCREMENT, " + sql_fields
+    return sql_fields, def_params
+
+
 # noinspection PyDefaultArgument
 async def _tweaked_create_table(
     class_: type,
@@ -129,24 +152,43 @@ async def _create_table(
     with a custom table, this is that custom table.
     :return: None.
     """
-    # noinspection PyUnresolvedReferences
-    fields: List[Field] = [
-        class_.__dataclass_fields__[key] for key in class_.__dataclass_fields__.keys()
-    ]
-    fields.sort(key=lambda field: field.name)  # Since dictionaries *may* be unsorted.
-
-    def_params = list()
-
-    sql_fields = ", ".join(
-        f"{field.name} {type_converter(field.type, type_overload)}"
-        f"{_get_default(field.default, type_overload, def_params)}"
-        for field in fields
+    sql_fields, def_params = _get_creation_data(
+        class_, type_overload, type_converter=type_converter
     )
-
-    sql_fields = "obj_id INTEGER PRIMARY KEY AUTOINCREMENT, " + sql_fields
+    print(sql_fields)
+    print(def_params)
     await cursor.execute(
         f"CREATE TABLE IF NOT EXISTS {class_.__name__.lower()} ({sql_fields});",
         def_params if def_params else None,
+    )
+
+
+# noinspection PyDefaultArgument
+def _sync_create_table(
+    class_: type,
+    cursor: sqlite3.Cursor,
+    type_overload: Dict[Optional[type], str] = type_table,
+    type_converter=_convert_type,
+) -> None:
+    sql_fields, def_params = _get_creation_data(
+        class_, type_overload, type_converter=type_converter
+    )
+    print(sql_fields)
+    print(def_params)
+    cursor.execute(
+        f"CREATE TABLE IF NOT EXISTS {class_.__name__.lower()} ({sql_fields});",
+        def_params if def_params else (),
+    )
+
+
+# noinspection PyDefaultArgument
+def _tweaked_sync_create_table(
+    class_: type,
+    cursor: sqlite3.Cursor,
+    type_overload: Dict[Optional[type], str] = type_table,
+) -> None:
+    _sync_create_table(
+        class_, cursor, type_overload, type_converter=_tweaked_convert_type
     )
 
 

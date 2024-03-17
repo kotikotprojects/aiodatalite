@@ -2,13 +2,21 @@
 Defines the Datalite decorator that can be used to convert a dataclass to
 a class bound to an sqlite3 database.
 """
+import sqlite3
 from dataclasses import asdict, fields
 from typing import Callable, Dict, Optional
 
 import aiosqlite
 from aiosqlite import IntegrityError
 
-from .commons import _create_table, _tweaked_create_table, _tweaked_dump, type_table
+from .commons import (
+    _create_table,
+    _sync_create_table,
+    _tweaked_create_table,
+    _tweaked_dump,
+    _tweaked_sync_create_table,
+    type_table,
+)
 from .constraints import ConstraintFailedError
 
 
@@ -132,6 +140,7 @@ def datalite(
     db_path: str,
     type_overload: Optional[Dict[Optional[type], str]] = None,
     tweaked: bool = True,
+    automarkup: bool = False,
 ) -> Callable:
     """Bind a dataclass to a sqlite3 database. This adds new methods to the class, such as
     `create_entry()`, `remove_entry()` and `update_entry()`.
@@ -139,6 +148,7 @@ def datalite(
     :param db_path: Path of the database to be bound.
     :param type_overload: Type overload dictionary.
     :param tweaked: Whether to use pickle type tweaks
+    :param automarkup: Whether to use automarkup (synchronously)
     :return: The new dataclass.
     """
 
@@ -150,6 +160,14 @@ def datalite(
         setattr(dataclass_, "db_path", db_path)
         setattr(dataclass_, "types_table", types_table)
         setattr(dataclass_, "tweaked", tweaked)
+
+        if automarkup:
+            with sqlite3.connect(db_path) as con:
+                cur: sqlite3.Cursor = con.cursor()
+                if tweaked:
+                    _tweaked_sync_create_table(dataclass_, cur, types_table)
+                else:
+                    _sync_create_table(dataclass_, cur, types_table)
 
         if tweaked:
             dataclass_.markup_table = _markup_table(_tweaked_create_table)
