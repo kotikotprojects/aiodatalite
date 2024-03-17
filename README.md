@@ -37,7 +37,7 @@ Use poetry to develop.
 
 ```python
 from dataclasses import dataclass
-from datalite import datalite
+from aiodatalite import datalite
 
 
 @datalite(db_path="db.db")

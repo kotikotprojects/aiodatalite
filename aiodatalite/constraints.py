@@ -1,5 +1,5 @@
 """
-datalite.constraints module introduces constraint
+aiodatalite.constraints module introduces constraint
     types that can be used to hint field variables,
     that can be used to signal datalite decorator
     constraints in the database.

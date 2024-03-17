@@ -3,9 +3,9 @@ from dataclasses import asdict, dataclass
 from math import floor
 from sqlite3 import connect
 
-from datalite import datalite
-from datalite.constraints import ConstraintFailedError, Unique
-from datalite.fetch import (
+from aiodatalite import datalite
+from aiodatalite.constraints import ConstraintFailedError, Unique
+from aiodatalite.fetch import (
     fetch_all,
     fetch_equals,
     fetch_from,
@@ -13,9 +13,9 @@ from datalite.fetch import (
     fetch_range,
     fetch_where,
 )
-from datalite.mass_actions import copy_many, create_many
-from datalite.migrations import _drop_table, migrate
-from datalite.typed import DataliteHinted
+from aiodatalite.mass_actions import copy_many, create_many
+from aiodatalite.migrations import _drop_table, migrate
+from aiodatalite.typed import DataliteHinted
 
 
 @datalite(db_path="test.db")
