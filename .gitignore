@@ -1,11 +1,11 @@
 .idea/*
 aiodatalite/__pycache__/*
 *.pyc
-datalite/*.db
+aiodatalite/*.db
 *.db
 docs/_build/*
 build/*
-datalite.egg-info/*
+aiodatalite.egg-info/*
 dist/*
 venv/*
 t/

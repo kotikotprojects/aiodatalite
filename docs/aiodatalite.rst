@@ -1,39 +1,39 @@
 API Reference
 ================
 
-datalite Module
+aiodatalite Module
 -----------------------------------
 
-.. autodecorator:: datalite.datalite
+.. autodecorator:: aiodatalite.datalite
 
-datalite.constraints module
+aiodatalite.constraints module
 ----------------------------------
 
-.. automodule:: datalite.constraints
+.. automodule:: aiodatalite.constraints
    :members:
    :undoc-members:
    :show-inheritance:
 
-datalite.fetch module
+aiodatalite.fetch module
 ---------------------
 
-.. automodule:: datalite.fetch
+.. automodule:: aiodatalite.fetch
    :members:
    :undoc-members:
    :show-inheritance:
 
-datalite.mass_actions module
+aiodatalite.mass_actions module
 ------------------------------
 
-.. automodule:: datalite.mass_actions
+.. automodule:: aiodatalite.mass_actions
    :members:
    :undoc-members:
    :show-inheritance:
 
-datalite.migrations module
+aiodatalite.migrations module
 ----------------------------
 
-.. automodule:: datalite.migrations
+.. automodule:: aiodatalite.migrations
    :members:
    :undoc-members:
    :show-inheritance:

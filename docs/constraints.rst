@@ -11,7 +11,7 @@ specific column **MUST** abide by specific constraints, these might be
 * Values of this column can be used to identify a record. (``PRIMARY``)
 * Values of this column has a default value. (``DEFAULT``)
 
-Some of these constraints are already implemented in datalite. With all of the set,
+Some of these constraints are already implemented in aiodatalite. With all of the set,
 is planned to be implemented in the future.
 
 Default Values
@@ -53,7 +53,7 @@ Uniqueness constraint is declared thusly:
 
 .. code-block:: python
     
-    from datalite.constraints import Unique
+    from aiodatalite.constraints import Unique
     
     @datalite("db.db")
     @dataclass

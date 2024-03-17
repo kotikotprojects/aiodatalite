@@ -1,11 +1,12 @@
 Fetching Functions
 ===================
 
-A database is hardly useful if data does not persist between program runs. In ``datalite``
-one can use ``datalite.fetch`` module to fetch data back from the database.
+A database is hardly useful if data does not persist between program runs. In ``aiodatalite``
+one can use ``aiodatalite.fetch`` module to fetch data back from the database.
 
 There are different sorts of fetching. One can fetch all the objects of a class
-using ``fetch_all(class_)``, or an object with a specific object id using ``fetch_from(class_, obj_id)``.
+using ``await fetch_all(class_)``, or an object with a specific object id using ``await fetch_from(class_, obj_id)``
+(useful when you know object id inside database, but lost the reference to the object itself somewhere).
 There are more functions for plural conditional fetching (``fetch_if``, ``fetch_where``) where
 all objects fitting a condition will be returned, as well as singular conditional fetching that returns
 the first object that fits a condition (``fetch_equals``).
@@ -13,7 +14,7 @@ the first object that fits a condition (``fetch_equals``).
 Pagination
 ##########
 
-Pagination is a feature that allows a portion of the results to be returned. Since ``datalite``
+Pagination is a feature that allows a portion of the results to be returned. Since ``aiodatalite``
 is built to work with databases that may include large amounts of data, many systems using large
 portions of data also make use of pagination. By building pagination inside the system, we hope to
 allow easier usage.
@@ -29,4 +30,4 @@ each page has. When ``page`` is set to 0, all results are returned irregardless 
 
 .. important::
 
-    More information regarding the ``datalite.fetch`` functions can be found in the API reference.
+    More information regarding the ``aiodatalite.fetch`` functions can be found in the API reference.
