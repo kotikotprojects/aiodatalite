@@ -25,4 +25,4 @@ Dataclass fields hinted with this type signals
 Unique = Union[Tuple[T], T]
 
 
-__all__ = ['Unique', 'ConstraintFailedError']
+__all__ = ["Unique", "ConstraintFailedError"]

@@ -3,12 +3,13 @@ This module includes functions to insert multiple records
 to a bound database at one time, with one time open and closing
 of the database file.
 """
-import aiosqlite
-from dataclasses import asdict
+from dataclasses import asdict, fields
 from typing import List, Tuple, TypeVar, Union
 from warnings import warn
 
-from .commons import _convert_sql_format
+import aiosqlite
+
+from .commons import _tweaked_dump
 from .constraints import ConstraintFailedError
 
 T = TypeVar("T")
@@ -42,7 +43,9 @@ def _check_homogeneity(objects: Union[List[T], Tuple[T]]) -> None:
         raise HeterogeneousCollectionError("Tuple or List is not homogeneous.")
 
 
-async def _toggle_memory_protection(cur: aiosqlite.Cursor, protect_memory: bool) -> None:
+async def _toggle_memory_protection(
+    cur: aiosqlite.Cursor, protect_memory: bool
+) -> None:
     """
     Given a cursor to a sqlite3 connection, if memory protection is false,
         toggle memory protections off.
@@ -74,35 +77,53 @@ async def _mass_insert(
     :return: None
     """
     _check_homogeneity(objects)
-    sql_queries = []
+    is_tweaked = getattr(objects[0], "tweaked")
     first_index: int = 0
     table_name = objects[0].__class__.__name__.lower()
 
     for i, obj in enumerate(objects):
-        kv_pairs = asdict(obj).items()
         setattr(obj, "obj_id", first_index + i + 1)
-        sql_queries.append(
-            f"INSERT INTO {table_name}("
-            + f"{', '.join(item[0] for item in kv_pairs)})"
-            + f" VALUES ({', '.join(_convert_sql_format(item[1], getattr(obj, 'types_table')) for item in kv_pairs)});"
-        )
     async with aiosqlite.connect(db_name) as con:
         cur: aiosqlite.Cursor = await con.cursor()
         try:
             await _toggle_memory_protection(cur, protect_memory)
-            await cur.execute(f"SELECT obj_id FROM {table_name} ORDER BY obj_id DESC LIMIT 1")
+            await cur.execute(
+                f"SELECT obj_id FROM {table_name} ORDER BY obj_id DESC LIMIT 1"
+            )
             index_tuple = await cur.fetchone()
             if index_tuple:
                 _ = index_tuple[0]
-            await cur.executescript(
-                "BEGIN TRANSACTION;\n" + "\n".join(sql_queries) + "\nEND TRANSACTION;"
-            )
+
+            await cur.execute("BEGIN TRANSACTION;")
+
+            for i, obj in enumerate(objects):
+                if is_tweaked:
+                    kv_pairs = [item for item in fields(obj)]
+                    kv_pairs.sort(key=lambda item: item.name)
+                    column_names = ", ".join(item.name for item in kv_pairs)
+                    vals = tuple(_tweaked_dump(obj, item.name) for item in kv_pairs)
+                else:
+                    kv_pairs = [item for item in asdict(obj).items()]
+                    kv_pairs.sort(key=lambda item: item[0])
+                    column_names = ", ".join(column[0] for column in kv_pairs)
+                    vals = tuple(column[1] for column in kv_pairs)
+                setattr(obj, "obj_id", first_index + i + 1)
+
+                placeholders = ", ".join("?" for _ in kv_pairs)
+                sql_statement = f"INSERT INTO {table_name} ({column_names}) VALUES ({placeholders});"
+
+                await cur.execute(sql_statement, vals)
+
+            await cur.execute("END TRANSACTION;")
+
         except aiosqlite.IntegrityError:
             raise ConstraintFailedError
         await con.commit()
 
 
-async def create_many(objects: Union[List[T], Tuple[T]], protect_memory: bool = True) -> None:
+async def create_many(
+    objects: Union[List[T], Tuple[T]], protect_memory: bool = True
+) -> None:
     """
     Insert many records corresponding to objects
     in a tuple or a list.
@@ -144,4 +165,4 @@ async def copy_many(
         raise ValueError("Collection is empty.")
 
 
-__all__ = ['copy_many', 'create_many', 'HeterogeneousCollectionError']
+__all__ = ["copy_many", "create_many", "HeterogeneousCollectionError"]
