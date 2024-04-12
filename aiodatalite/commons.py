@@ -155,8 +155,6 @@ async def _create_table(
     sql_fields, def_params = _get_creation_data(
         class_, type_overload, type_converter=type_converter
     )
-    print(sql_fields)
-    print(def_params)
     await cursor.execute(
         f"CREATE TABLE IF NOT EXISTS {class_.__name__.lower()} ({sql_fields});",
         def_params if def_params else None,
@@ -173,8 +171,6 @@ def _sync_create_table(
     sql_fields, def_params = _get_creation_data(
         class_, type_overload, type_converter=type_converter
     )
-    print(sql_fields)
-    print(def_params)
     cursor.execute(
         f"CREATE TABLE IF NOT EXISTS {class_.__name__.lower()} ({sql_fields});",
         def_params if def_params else (),
