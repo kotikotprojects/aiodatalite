@@ -24,7 +24,7 @@ copyright = "2020, Ege Ozkan; 2024, hhh"
 author = "Ege Ozkan, hhh"
 
 # The full version, including alpha/beta/rc tags
-release = "v1.0.0"
+release = "v1.0.1"
 
 
 # -- General configuration ---------------------------------------------------

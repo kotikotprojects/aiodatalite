@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "aiodatalite"
-version = "1.0.0"
+version = "1.0.1"
 description = "A simple Python library to bind dataclasses with databases. Now asynchronous!"
 authors = ["hhh <shshshsh@horsefucker.org>", "Ege Ozkan <egeemirozkan24@gmail.com>"]
 documentation = "https://aiodatalite.readthedocs.io"
