@@ -106,7 +106,7 @@ def _modify_records(
     for record in data:
         record_mod = {}
         for key in record.keys():
-            if key in col_to_del and key in flow:
+            if key in col_to_del and flow and key in flow:
                 record_mod[flow[key]] = record[key]
             elif key in col_to_del:
                 pass
