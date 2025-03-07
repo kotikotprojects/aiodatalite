@@ -263,6 +263,7 @@ async def fetch_all(
 __all__ = [
     "is_fetchable",
     "fetch_equals",
+    "fetch_one",
     "fetch_from",
     "fetch_if",
     "fetch_where",
