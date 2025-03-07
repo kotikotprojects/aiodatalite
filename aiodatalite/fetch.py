@@ -76,6 +76,25 @@ async def fetch_equals(
     return obj
 
 
+async def fetch_one(
+    class_: Type[T],
+    field: str,
+    value: Any,
+) -> T | None:
+    """
+    Fetch a class_ type variable from its bound db.
+
+    :param class_: Class to fetch.
+    :param field: Field to check for, by default, object id.
+    :param value: Value of the field to check for.
+    :return: The object whose data is taken from the database or None if not found.
+    """
+    try:
+        await fetch_equals(class_, field, value)
+    except TypeError:
+        return None
+
+
 async def fetch_from(class_: Type[T], obj_id: int) -> T:
     """
     Fetch a class_ type variable from its bound dv.
